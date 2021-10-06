@@ -5,6 +5,7 @@ const helmet = require('helmet')
 const morgan = require('morgan')
 const userRoutes = require('./routes/users')
 const authRoutes = require('./routes/auth')
+const postRoutes = require('./routes/posts')
 
 // initiate dotenv
 dotenv.config()
@@ -33,6 +34,7 @@ app.use(morgan('common'))
 // routes
 app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
+app.use('/api/posts', postRoutes)
 
 // connect server
 app.listen(PORT, () =>
