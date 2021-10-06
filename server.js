@@ -1,5 +1,5 @@
 const express = require('express')
-const db = require('./config/connection')
+const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const helmet = require('helmet')
 const morgan = require('morgan')
@@ -8,6 +8,17 @@ const authRoutes = require('./routes/auth')
 
 // initiate dotenv
 dotenv.config()
+
+// connect to DB
+mongoose.connect(
+  process.env.MONGODB_URI,
+  {
+    useNewUrlParser: true,
+  },
+  () => {
+    console.log('Connected to DB')
+  },
+)
 
 // initiate express
 const app = express()
@@ -23,9 +34,7 @@ app.use(morgan('common'))
 app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
 
-// connect to database
-db.once('open', () => {
-  app.listen(PORT, () =>
-    console.log(`🌍 Backend server listening on PORT:${PORT}`),
-  )
-})
+// connect server
+app.listen(PORT, () =>
+  console.log(`🌍 Backend server listening on PORT:${PORT}`),
+)
