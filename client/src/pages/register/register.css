@@ -27,3 +27,29 @@
     color: #1775ee;
     margin-bottom: 10px;
   }
+
+  .loginDesc {
+    font-size: 24px;
+  }
+  
+  .loginBox{
+      height: 400px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+  }
+  
+  .loginInput{
+      height: 50px;
+      border-radius: 10px;
+      border: 1px solid gray;
+      font-size: 18px;
+      padding-left: 20px;
+  }
+  
+  .loginInput:focus{
+      outline: none;
+  }
