@@ -2,59 +2,59 @@ export const Users = [
     {
         id: 1,
         profilePicture: "assets/person/1.jpeg",
-        username: "Safak Kocaoglu",
+        username: "Lana Richards",
     },
     {
         id: 2,
         profilePicture: "assets/person/2.jpeg",
-        username: "Janell Shrum",
+        username: "Jason Wright",
     },
     {
         id: 3,
         profilePicture: "assets/person/3.jpeg",
-        username: "Alex Durden",
+        username: "Jane Smith",
     },
     {
         id: 4,
         profilePicture: "assets/person/4.jpeg",
-        username: "Dora Hawks",
+        username: "Hanna Richardson",
     },
     {
         id: 5,
         profilePicture: "assets/person/5.jpeg",
-        username: "Thomas Holden",
+        username: "Kim Black",
     },
     {
         id: 6,
         profilePicture: "assets/person/6.jpeg",
-        username: "Shirley Beauchamp",
+        username: "Tessa Grimm",
     },
     {
         id: 7,
         profilePicture: "assets/person/7.jpeg",
-        username: "Travis Bennett",
+        username: "Pablo Nueva",
     },
     {
         id: 8,
         profilePicture: "assets/person/8.jpeg",
-        username: "Kristen Thomas",
+        username: "Clark Parker",
     },
     {
         id: 9,
         profilePicture: "assets/person/9.jpeg",
-        username: "Gary Duty",
+        username: "Rosa James",
     },
     {
         id: 10,
         profilePicture: "assets/person/10.jpeg",
-        username: "Safak Kocaoglu",
+        username: "Karen Novak",
     },
 ];
 
 export const Posts = [
     {
         id: 1,
-        desc: "Love For All, Hatred For None.",
+        desc: "Yaay my first post.",
         photo: "assets/post/1.jpeg",
         date: "5 mins ago",
         userId: 1,
@@ -71,11 +71,11 @@ export const Posts = [
     },
     {
         id: 3,
-        desc: "Every moment is a fresh beginning.",
+        desc: "Enjiy life.",
         photo: "assets/post/3.jpeg",
         date: "1 hour ago",
         userId: 3,
-        like: 61,
+        like: 23,
         comment: 2,
     },
     {
@@ -104,7 +104,7 @@ export const Posts = [
     },
     {
         id: 7,
-        desc: "Never regret anything that made you smile.",
+        desc: "Testing, first time here",
         photo: "assets/post/7.jpeg",
         date: "2 days ago",
         userId: 7,
@@ -121,7 +121,7 @@ export const Posts = [
     },
     {
         id: 9,
-        desc: "Change the world by being yourself.",
+        desc: "No RegRAts.",
         photo: "assets/post/9.jpeg",
         date: "5 days ago",
         userId: 9,
