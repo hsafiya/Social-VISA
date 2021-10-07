@@ -9,7 +9,7 @@ import {
   WorkOutline,
   Event,
   School,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { Users } from "../../dummyData";
 import CloseFriend from "../closeFriend/CloseFriend";
 

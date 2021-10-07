@@ -6,13 +6,13 @@ export default function Topbar() {
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
-        <span className="logo">Social VISA</span>
+        <span className="logo">Lamasocial</span>
       </div>
       <div className="topbarCenter">
         <div className="searchbar">
           <Search className="searchIcon" />
           <input
-            placeholder="Search for your friends"
+            placeholder="Search for friend, post or video"
             className="searchInput"
           />
         </div>
