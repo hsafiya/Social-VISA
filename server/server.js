@@ -12,7 +12,7 @@ dotenv.config()
 
 // connect to DB
 mongoose.connect(
-  process.env.MONGODB_URI,
+  process.env.MONGODB_URI || 'mongodb://localhost/social-visa',
   {
     useNewUrlParser: true,
   },
