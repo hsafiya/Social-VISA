@@ -94,3 +94,9 @@
   object-fit: cover;
   cursor: pointer;
 }
+
+@media screen and (max-width: 768px)  {
+  .topbarLink{
+    display: none;
+  }
+}

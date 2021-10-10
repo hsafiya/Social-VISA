@@ -1,13 +1,18 @@
 const express = require('express')
+const app = express()
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const helmet = require('helmet')
 const morgan = require('morgan')
-const userRoutes = require('./routes/users')
-const authRoutes = require('./routes/auth')
-const postRoutes = require('./routes/posts')
+const multer = require('multer')
+const userRoute = require('./routes/users')
+const authRoute = require('./routes/auth')
+const postRoute = require('./routes/posts')
+const conversationRoute = require('./routes/conversations')
+const messageRoute = require('./routes/messages')
+const router = express.Router()
+const path = require('path')
 
-// initiate dotenv
 dotenv.config()
 
 // connect to DB
@@ -15,28 +20,45 @@ mongoose.connect(
   process.env.MONGODB_URI || 'mongodb://localhost/social-visa',
   {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
   },
   () => {
     console.log('Connected to DB')
   },
 )
 
-// initiate express
-const app = express()
-const PORT = process.env.PORT || 3001
+app.use('/images', express.static(path.join(__dirname, 'public/images')))
 
-// express midlleware
-app.use(express.urlencoded({ extended: true }))
+//middleware
 app.use(express.json())
 app.use(helmet())
 app.use(morgan('common'))
 
-// routes
-app.use('/api/users', userRoutes)
-app.use('/api/auth', authRoutes)
-app.use('/api/posts', postRoutes)
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images')
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.name)
+  },
+})
 
-// connect server
-app.listen(PORT, () =>
-  console.log(`🌍 Backend server listening on PORT:${PORT}`),
-)
+const upload = multer({ storage: storage })
+app.post('/api/upload', upload.single('file'), (req, res) => {
+  try {
+    return res.status(200).json('File uploded successfully')
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+app.use('/api/auth', authRoute)
+app.use('/api/users', userRoute)
+app.use('/api/posts', postRoute)
+app.use('/api/conversations', conversationRoute)
+app.use('/api/messages', messageRoute)
+
+app.listen(8800, () => {
+  console.log('Backend server is running!')
+})
