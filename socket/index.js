@@ -17,3 +17,12 @@ const removeUser = (socketId) => {
     return users.find((user) => user.userId === userId);
   };
   
+  io.on("connection", (socket) => {
+    //when ceonnect
+    console.log("a user connected.");
+  
+    //take userId and socketId from user
+    socket.on("addUser", (userId) => {
+      addUser(userId, socket.id);
+      io.emit("getUsers", users);
+    });
