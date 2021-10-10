@@ -28,8 +28,8 @@
   margin: 30px 0;
 }
 
-.rightbarTitle {
-  margin-bottom: 20px;
+.rightbarTitle{
+    margin-bottom: 20px;
 }
 
 .rightbarFriendList {
@@ -38,46 +38,65 @@
   list-style: none;
 }
 
-.rightbarTitle {
+.rightbarTitle{
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 10px;
 }
 
-.rightbarInfo {
+.rightbarInfo{
   margin-bottom: 30px;
 }
 
-.rightbarInfoItem {
+.rightbarInfoItem{
   margin-bottom: 10px;
 }
 
-.rightbarInfoKey {
+.rightbarInfoKey{
   font-weight: 500;
   margin-right: 15px;
   color: #555;
 }
 
-.rightbarInfoValue {
+.rightbarInfoValue{
   font-weight: 300;
 }
 
-.rightbarFollowings {
+.rightbarFollowings{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 
-.rightbarFollowing {
+.rightbarFollowing{
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
   cursor: pointer;
 }
 
-.rightbarFollowingImg {
+.rightbarFollowingImg{
   width: 100px;
   height: 100px;
   object-fit: cover;
   border-radius: 5px;
+}
+
+.rightbarFollowButton{
+  margin-top: 30px;
+  margin-bottom: 10px;
+  border: none;
+  background-color: #1872f2;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.rightbarFollowButton:focus{
+  outline: none;
 }
