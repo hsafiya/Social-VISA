@@ -55,11 +55,41 @@ const resolvers = {
       const token = signToken(user)
       return { token, user }
     },
+    editUser: async (parent, args, context) => {
+      if (context.user) {
+        const {
+          profilePicture,
+          coverPicture,
+          desc,
+          city,
+          from,
+          relationship,
+        } = args
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $set: {
+              profilePicture: profilePicture,
+              coverPicture: coverPicture,
+              desc: desc,
+              city: city,
+              from: from,
+              relationship: relationship,
+            },
+          },
+          { new: true },
+        )
+
+        return updatedUser
+      }
+
+      throw new AuthenticationError('You need to be logged in!')
+    },
     addPost: async (parent, args, context) => {
       if (context.user) {
         const post = await Post.create({
           ...args,
-          username: context.user.username,
+          userId: context.user._id,
         })
 
         await User.findByIdAndUpdate(
@@ -71,6 +101,22 @@ const resolvers = {
         return post
       }
 
+      throw new AuthenticationError('You need to be logged in!')
+    },
+    deletePost: async (parent, { postId }, context) => {
+      if (context.user) {
+        const post = await Post.findById(postId)
+        if (context.user._id === post.userId) {
+          await User.findByIdAndUpdate(
+            { _id: context.user._id },
+            { $pull: { posts: postId } },
+            { new: true },
+          )
+          return User
+        } else {
+          console.error('You can delete only your own posts!')
+        }
+      }
       throw new AuthenticationError('You need to be logged in!')
     },
     addComment: async (parent, { postId, commentText }, context) => {
