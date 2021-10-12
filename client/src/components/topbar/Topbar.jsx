@@ -131,7 +131,6 @@ export default function Topbar() {
               <Avatar /> Profile
             </MenuItem>
           </Link>
-
           <MenuItem>
             <Avatar /> My account
           </MenuItem>
@@ -146,7 +145,12 @@ export default function Topbar() {
             <ListItemIcon>
               <Logout fontSize="small" />
             </ListItemIcon>
-            <Link to={`/profile/${user.username}`}>Logout</Link>
+            <Link
+              to={`/profile/${user.username}`}
+              style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }}
+            >
+              Logout
+            </Link>
           </MenuItem>
         </Menu>
       </div>

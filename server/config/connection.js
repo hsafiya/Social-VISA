@@ -1,7 +1,10 @@
 const mongoose = require('mongoose')
+const dotenv = require('dotenv')
+
+dotenv.config()
 
 mongoose.connect(
-  process.env.MONGODB_URI || 'mongodb://localhost/social-visa',
+  process.env.MONGO_URI,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -14,3 +17,5 @@ mongoose.connect(
 )
 
 module.exports = mongoose.connection
+
+// || 'mongodb://localhost/social-visa'

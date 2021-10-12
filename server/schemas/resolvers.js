@@ -136,19 +136,42 @@ const resolvers = {
 
       throw new AuthenticationError('You need to be logged in!')
     },
-    // addFriend: async (parent, { friendId }, context) => {
-    //   if (context.user) {
-    //     const updatedUser = await User.findOneAndUpdate(
-    //       { _id: context.user._id },
-    //       { $addToSet: { friends: friendId } },
-    //       { new: true }
-    //     ).populate('friends');
+    follow: async (parent, { friendId }, context) => {
+      if (context.user) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { followings: friendId } },
+          { new: true },
+        ).populate('followings')
+        const friend = await User.findOneAndUpdate(
+          { _id: friendId },
+          { $addToSet: { followers: context.user._id } },
+          { new: true },
+        ).populate('followers')
 
-    //     return updatedUser;
-    //   }
+        return updatedUser
+      }
 
-    //   throw new AuthenticationError('You need to be logged in!');
-    // }
+      throw new AuthenticationError('You need to be logged in!')
+    },
+    unfollow: async (parent, { friendId }, context) => {
+      if (context.user) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { followings: friendId } },
+          { new: true },
+        ).populate('followings')
+        const friend = await User.findOneAndUpdate(
+          { _id: friendId },
+          { $pull: { followers: context.user._id } },
+          { new: true },
+        ).populate('followers')
+
+        return updatedUser
+      }
+
+      throw new AuthenticationError('You need to be logged in!')
+    },
   },
 }
 
