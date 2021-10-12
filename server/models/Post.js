@@ -3,7 +3,7 @@ const commentSchema = require('./Comment')
 
 const postSchema = new Schema(
   {
-    userId: {
+    username: {
       type: String,
       required: true,
     },

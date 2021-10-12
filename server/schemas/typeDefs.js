@@ -22,8 +22,8 @@ const typeDefs = gql`
     _id: ID
     postText: String
     createdAt: String
-    userId: String
-    likes: Int
+    username: String
+    likes: [String]
     img: String
     comments: [Comment]
   }
@@ -32,7 +32,7 @@ const typeDefs = gql`
     _id: ID
     commentText: String
     createdAt: String
-    userId: String
+    username: String
   }
 
   type Auth {
@@ -44,7 +44,7 @@ const typeDefs = gql`
     me: User
     users: [User]
     user(username: String!): User
-    posts(userId: String): [Post]
+    posts(username: String): [Post]
     post(_id: ID!): Post
   }
 
@@ -62,8 +62,8 @@ const typeDefs = gql`
     addPost(postText: String!): Post
     addComment(postId: ID!, commentText: String!): Post
     deletePost(postId: ID!): Post
-    follow(friendId: ID!): User
-    unfollow(friendId: ID!): User
+    follow(friendId: ID!): [User]
+    unfollow(friendId: ID!): [User]
   }
 `
 
