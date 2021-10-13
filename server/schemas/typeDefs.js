@@ -14,7 +14,6 @@ const typeDefs = gql`
     desc: String
     city: String
     from: String
-    relationship: Int
     posts: [Post]
   }
 
@@ -57,7 +56,6 @@ const typeDefs = gql`
       desc: String
       city: String
       from: String
-      relationship: Int
     ): User
     addPost(postText: String!): Post
     addComment(postId: ID!, commentText: String!): Post

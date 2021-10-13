@@ -7,8 +7,8 @@ import {
   Settings,
 } from '@material-ui/icons'
 import { Link } from 'react-router-dom'
-import { useContext, useState } from 'react'
-import { AuthContext } from '../../context/AuthContext'
+import { useState } from 'react'
+// import { AuthContext } from '../../context/AuthContext'
 import Avatar from '@mui/material/Avatar'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -18,9 +18,14 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Logout from '@mui/icons-material/Logout'
 
+import { useQuery } from '@apollo/react-hooks'
+import { QUERY_ME_BASIC } from '../../utils/queries'
+
 export default function Topbar() {
-  const { user } = useContext(AuthContext)
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER
+  const { data: userData } = useQuery(QUERY_ME_BASIC)
+
+  // const { user } = useContext(AuthContext)
+  // const PF = process.env.REACT_APP_PUBLIC_FOLDER
 
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
@@ -79,9 +84,9 @@ export default function Topbar() {
             <Avatar sx={{ width: 32, height: 32 }}>
               <img
                 src={
-                  user.profilePicture
-                    ? PF + user.profilePicture
-                    : PF + 'person/noAvatar.png'
+                  userData.profilePicture
+                    ? userData.profilePicture
+                    : 'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg'
                 }
                 alt=""
                 // className="topbarImg"
@@ -124,7 +129,7 @@ export default function Topbar() {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
           <Link
-            to={`/profile/${user.username}`}
+            to={`/profile/${userData.username}`}
             style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }}
           >
             <MenuItem>
@@ -146,7 +151,7 @@ export default function Topbar() {
               <Logout fontSize="small" />
             </ListItemIcon>
             <Link
-              to={`/profile/${user.username}`}
+              to={`/profile/${userData.username}`}
               style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }}
             >
               Logout
