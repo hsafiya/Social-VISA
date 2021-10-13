@@ -14,9 +14,7 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom'
-import { useContext } from 'react'
-import { AuthContext } from './context/AuthContext'
-import Messenger from './pages/messenger/Messenger'
+import Auth from './utils/auth'
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:3001/graphql',
@@ -25,23 +23,44 @@ const httpLink = createHttpLink({
 const client = new ApolloClient({
   link: httpLink,
   cache: new InMemoryCache(),
+  request: (operation) => {
+    const token = localStorage.getItem('id_token')
+
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : '',
+      },
+    })
+  },
 })
+// const client = new ApolloClient({
+//   request: operation => {
+//     const token = localStorage.getItem('id_token');
+
+//     operation.setContext({
+//       headers: {
+//         authorization: token ? `Bearer ${token}` : ''
+//       }
+//     });
+//   },
+//   uri: '/graphql'
+// });
 
 function App() {
-  const { user } = useContext(AuthContext)
+  const loggedIn = Auth.loggedIn()
+
   return (
     <ApolloProvider client={client}>
       <Router>
         <Switch>
           <Route exact path="/">
-            {user ? <Home /> : <Register />}
+            {loggedIn ? <Home /> : <Register />}
           </Route>
-          <Route path="/login">{user ? <Redirect to="/" /> : <Login />}</Route>
+          <Route path="/login">
+            {loggedIn ? <Redirect to="/" /> : <Login />}
+          </Route>
           <Route path="/register">
-            {user ? <Redirect to="/" /> : <Register />}
-          </Route>
-          <Route path="/messenger">
-            {!user ? <Redirect to="/" /> : <Messenger />}
+            {loggedIn ? <Redirect to="/" /> : <Register />}
           </Route>
           <Route path="/profile/:username">
             <Profile />

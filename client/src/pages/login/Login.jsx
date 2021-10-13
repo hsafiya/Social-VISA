@@ -1,20 +1,48 @@
-import { useContext, useRef } from 'react'
+import { useContext, useRef, useState } from 'react'
 import './login.css'
-import { loginCall } from '../../apiCalls'
-import { AuthContext } from '../../context/AuthContext'
+// import { loginCall } from '../../apiCalls'
+// import { AuthContext } from '../../context/AuthContext'
 import { CircularProgress } from '@material-ui/core'
 
-export default function Login() {
-  const email = useRef()
-  const password = useRef()
-  const { isFetching, dispatch } = useContext(AuthContext)
+import Auth from '../../utils/auth'
+import { useMutation } from '@apollo/react-hooks'
+import { LOGIN_USER } from '../../utils/mutations'
 
-  const handleClick = (e) => {
+export default function Login() {
+  const [formState, setFormState] = useState({ email: '', password: '' })
+  const [login, { error }] = useMutation(LOGIN_USER)
+
+  // const email = useRef()
+  // const password = useRef()
+  // const { isFetching, dispatch } = useContext(AuthContext)
+
+  // update state based on form input changes
+  const handleChange = (event) => {
+    const { name, value } = event.target
+
+    setFormState({
+      ...formState,
+      [name]: value,
+    })
+  }
+
+  const handleClick = async (e) => {
     e.preventDefault()
-    loginCall(
-      { email: email.current.value, password: password.current.value },
-      dispatch,
-    )
+    try {
+      const { data } = await login({
+        variables: { ...formState },
+      })
+
+      Auth.login(data.login.token)
+    } catch (e) {
+      console.error(e)
+    }
+
+    // clear form values
+    setFormState({
+      email: '',
+      password: '',
+    })
   }
 
   return (
@@ -30,33 +58,36 @@ export default function Login() {
           <form className="loginBox" onSubmit={handleClick}>
             <input
               placeholder="Email"
+              name="email"
               type="email"
+              id="email"
+              value={formState.email}
+              onChange={handleChange}
               required
               className="loginInput"
-              ref={email}
             />
             <input
-              placeholder="Password"
-              type="password"
               required
               minLength="6"
               className="loginInput"
-              ref={password}
+              placeholder="Password"
+              name="password"
+              type="password"
+              id="password"
+              value={formState.password}
+              onChange={handleChange}
             />
-            <button className="loginButton" type="submit" disabled={isFetching}>
-              {isFetching ? (
-                <CircularProgress color="white" size="20px" />
-              ) : (
-                'Log In'
-              )}
+            <button className="loginButton" type="submit">
+              Log In
             </button>
             <span className="loginForgot">Forgot Password?</span>
-            <button className="loginRegisterButton">
-              {isFetching ? (
-                <CircularProgress color="white" size="20px" />
-              ) : (
-                'Create a New Account'
-              )}
+            <button
+              className="loginRegisterButton"
+              onClick={() => {
+                window.location = '/register'
+              }}
+            >
+              Create a New Account
             </button>
           </form>
         </div>
