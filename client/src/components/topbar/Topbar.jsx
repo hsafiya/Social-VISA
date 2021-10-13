@@ -8,7 +8,6 @@ import {
 } from '@material-ui/icons'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-// import { AuthContext } from '../../context/AuthContext'
 import Avatar from '@mui/material/Avatar'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -18,14 +17,15 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import Logout from '@mui/icons-material/Logout'
 
+import Auth from '../../utils/auth'
 import { useQuery } from '@apollo/react-hooks'
 import { QUERY_ME_BASIC } from '../../utils/queries'
 
 export default function Topbar() {
-  const { data: userData } = useQuery(QUERY_ME_BASIC)
+  const { data: userData, loading } = useQuery(QUERY_ME_BASIC)
+  const me = userData?.me || {}
 
-  // const { user } = useContext(AuthContext)
-  // const PF = process.env.REACT_APP_PUBLIC_FOLDER
+  console.log(me)
 
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
@@ -81,17 +81,27 @@ export default function Topbar() {
 
         <Tooltip title="Click for Options">
           <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
-            <Avatar sx={{ width: 32, height: 32 }}>
-              <img
-                src={
-                  userData.profilePicture
-                    ? userData.profilePicture
-                    : 'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg'
-                }
-                alt=""
-                // className="topbarImg"
-              />
-            </Avatar>
+            {loading ? (
+              <Avatar sx={{ width: 32, height: 32 }}>
+                <img
+                  src="https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
+                  alt=""
+                  className="topbarImg"
+                />
+              </Avatar>
+            ) : (
+              <Avatar sx={{ width: 32, height: 32 }}>
+                <img
+                  src={
+                    me.profilePicture
+                      ? me.profilePicture
+                      : 'https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg'
+                  }
+                  alt=""
+                  className="topbarImg"
+                />
+              </Avatar>
+            )}
           </IconButton>
         </Tooltip>
         <Menu
@@ -129,7 +139,7 @@ export default function Topbar() {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
           <Link
-            to={`/profile/${userData.username}`}
+            to={`/profile/${me.username}`}
             style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }}
           >
             <MenuItem>
@@ -151,7 +161,11 @@ export default function Topbar() {
               <Logout fontSize="small" />
             </ListItemIcon>
             <Link
-              to={`/profile/${userData.username}`}
+              to={`/`}
+              onClick={(e) => {
+                e.preventDefault()
+                Auth.logout()
+              }}
               style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.87)' }}
             >
               Logout
