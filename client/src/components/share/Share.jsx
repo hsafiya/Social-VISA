@@ -13,12 +13,12 @@ import { ADD_POST } from '../../utils/mutations'
 import { QUERY_POSTS, QUERY_ME } from '../../utils/queries'
 
 export default function Share() {
-  const { data: userData, loading } = useQuery(QUERY_ME)
+  const { data: userData } = useQuery(QUERY_ME)
   const me = userData?.me || {}
   const [postText, setPostText] = useState('')
   const [characterCount, setCharacterCount] = useState(0)
 
-  const [addPost, { error }] = useMutation(ADD_POST, {
+  const [addPost] = useMutation(ADD_POST, {
     update(cache, { data: { addPost } }) {
       try {
         // update thought array's cache
@@ -67,9 +67,6 @@ export default function Share() {
     }
   }
 
-  // const { user } = useContext(AuthContext);
-  // const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  // const desc = useRef();
   const [file, setFile] = useState(null)
 
   // const submitHandler = async (e) => {

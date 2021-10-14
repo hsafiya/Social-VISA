@@ -1,23 +1,22 @@
 import './post.css'
 import { MoreVert } from '@material-ui/icons'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { format } from 'timeago.js'
 import { Link } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { QUERY_USER, QUERY_ME } from '../../utils/queries'
+import { QUERY_USER } from '../../utils/queries'
 
 export default function Post({ post }) {
   // console.log(post)
 
-  const { loading, data } = useQuery(QUERY_USER, {
+  const { data } = useQuery(QUERY_USER, {
     variables: { username: post.username },
   })
   const user = data?.user || {}
 
   const [like, setLike] = useState(0)
-  const [isLiked, setIsLiked] = useState(false)
+  // const [isLiked, setIsLiked] = useState(false)
   const PF = process.env.REACT_APP_PUBLIC_FOLDER
-  // const { user: currentUser } = useContext(AuthContext)
 
   // useEffect(() => {
   //   setIsLiked(post.likes.includes(currentUser._id))

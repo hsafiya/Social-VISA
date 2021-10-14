@@ -1,54 +1,43 @@
 import './rightbar.css'
 import Online from '../online/Online'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Add, Remove } from '@material-ui/icons'
 
 import Auth from '../../utils/auth'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { QUERY_ME, QUERY_USER } from '../../utils/queries'
+import { ADD_FRIEND, REMOVE_FRIEND } from '../../utils/mutations'
 
-export default function Rightbar({ info }) {
+export default function Rightbar() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER
   const [followed, setFollowed] = useState(false)
 
   const { username: userParam } = useParams()
+  const [addFriend] = useMutation(ADD_FRIEND)
+  const [removeFriend] = useMutation(REMOVE_FRIEND)
 
-  const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
+  const { data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
     variables: { username: userParam },
   })
   const user = data?.me || data?.user || {}
-  console.log(user)
+  // console.log(user)
 
   const profile = Auth.getProfile()
 
-  // useEffect(() => {
-  //   const getFriends = async () => {
-  //     try {
-  //       const friendList = await axios.get('/users/friends/' + user._id)
-  //       setFriends(friendList.data)
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   }
-  //   getFriends()
-  // }, [user])
-
   const handleClick = async () => {
-    // try {
-    //   if (followed) {
-    //     await axios.put(`/users/${user._id}/unfollow`, {
-    //       userId: currentUser._id,
-    //     })
-    //     dispatch({ type: 'UNFOLLOW', payload: user._id })
-    //   } else {
-    //     await axios.put(`/users/${user._id}/follow`, {
-    //       userId: currentUser._id,
-    //     })
-    //     dispatch({ type: 'FOLLOW', payload: user._id })
-    //   }
-    setFollowed(!followed)
-    // } catch (err) {}
+    try {
+      if (!followed) {
+        await addFriend({
+          variables: { username: user.username },
+        })
+      } else {
+        await removeFriend({
+          variables: { username: user.username },
+        })
+      }
+      setFollowed(!followed)
+    } catch (err) {}
   }
 
   const HomeRightbar = () => {

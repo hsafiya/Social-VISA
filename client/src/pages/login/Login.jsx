@@ -1,8 +1,5 @@
-import { useContext, useRef, useState } from 'react'
+import { useState } from 'react'
 import './login.css'
-// import { loginCall } from '../../apiCalls'
-// import { AuthContext } from '../../context/AuthContext'
-import { CircularProgress } from '@material-ui/core'
 
 import Auth from '../../utils/auth'
 import { useMutation } from '@apollo/react-hooks'
@@ -10,11 +7,7 @@ import { LOGIN_USER } from '../../utils/mutations'
 
 export default function Login() {
   const [formState, setFormState] = useState({ email: '', password: '' })
-  const [login, { error }] = useMutation(LOGIN_USER)
-
-  // const email = useRef()
-  // const password = useRef()
-  // const { isFetching, dispatch } = useContext(AuthContext)
+  const [login] = useMutation(LOGIN_USER)
 
   // update state based on form input changes
   const handleChange = (event) => {
