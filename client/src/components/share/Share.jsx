@@ -1,61 +1,98 @@
-import "./share.css";
+import './share.css'
 import {
   PermMedia,
   Label,
   Room,
   EmojiEmotions,
   Cancel,
-} from "@material-ui/icons";
-import { useContext, useRef, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import axios from "axios";
+} from '@material-ui/icons'
+import { useState } from 'react'
+// import axios from "axios";
+import { useMutation, useQuery } from '@apollo/react-hooks'
+import { ADD_POST } from '../../utils/mutations'
+import { QUERY_POSTS, QUERY_ME } from '../../utils/queries'
 
 export default function Share() {
-  const { user } = useContext(AuthContext);
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const desc = useRef();
-  const [file, setFile] = useState(null);
+  const { data: userData, loading } = useQuery(QUERY_ME)
+  const me = userData?.me || {}
+  const [postText, setPostText] = useState('')
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    const newPost = {
-      userId: user._id,
-      desc: desc.current.value,
-    };
-    if (file) {
-      const data = new FormData();
-      const fileName = Date.now() + file.name;
-      data.append("name", fileName);
-      data.append("file", file);
-      newPost.img = fileName;
-      console.log(newPost);
+  const [addPost, { error }] = useMutation(ADD_POST, {
+    update(cache, { data: { addPost } }) {
       try {
-        await axios.post("/upload", data);
-      } catch (err) {}
-    }
+        // update thought array's cache
+        // could potentially not exist yet, so wrap in a try/catch
+        const { posts } = cache.readQuery({ query: QUERY_POSTS })
+        cache.writeQuery({
+          query: QUERY_POSTS,
+          data: { posts: [addPost, ...posts] },
+        })
+      } catch (e) {
+        console.error(e)
+      }
+
+      // update me object's cache
+      const { me } = cache.readQuery({ query: QUERY_ME })
+      cache.writeQuery({
+        query: QUERY_ME,
+        data: { me: { ...me, posts: [...me.posts, addPost] } },
+      })
+    },
+  })
+
+  // submit form
+  const submitHandler = async (event) => {
+    event.preventDefault()
+
     try {
-      await axios.post("/posts", newPost);
-      window.location.reload();
-    } catch (err) {}
-  };
+      await addPost({
+        variables: { postText },
+      })
+
+      // clear form value
+      setPostText('')
+      window.location.reload()
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  // const { user } = useContext(AuthContext);
+  // const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  // const desc = useRef();
+  const [file, setFile] = useState(null)
+
+  // const submitHandler = async (e) => {
+  //   e.preventDefault();
+  //   const newPost = {
+  //     userId: user._id,
+  //     desc: desc.current.value,
+  //   };
+  //   if (file) {
+  //     const data = new FormData();
+  //     const fileName = Date.now() + file.name;
+  //     data.append("name", fileName);
+  //     data.append("file", file);
+  //     newPost.img = fileName;
+  //     console.log(newPost);
+  //     try {
+  //       await axios.post("/upload", data);
+  //     } catch (err) {}
+  //   }
+  //   try {
+  //     await axios.post("/posts", newPost);
+  //     window.location.reload();
+  //   } catch (err) {}
+  // };
 
   return (
     <div className="share">
       <div className="shareWrapper">
         <div className="shareTop">
-          <img
-            className="shareProfileImg"
-            src={
-              user.profilePicture
-                ? PF + user.profilePicture
-                : PF + "person/noAvatar.png"
-            }
-            alt=""
-          />
+          <img className="shareProfileImg" src={me.profilePicture} alt="" />
           <input
-            placeholder={"What's in your mind " + user.username + "?"}
+            placeholder={"What's in your mind " + me.username + '?'}
             className="shareInput"
-            ref={desc}
           />
         </div>
         <hr className="shareHr" />
@@ -71,7 +108,7 @@ export default function Share() {
               <PermMedia htmlColor="tomato" className="shareIcon" />
               <span className="shareOptionText">Photo or Video</span>
               <input
-                style={{ display: "none" }}
+                style={{ display: 'none' }}
                 type="file"
                 id="file"
                 accept=".png,.jpeg,.jpg"
@@ -97,5 +134,5 @@ export default function Share() {
         </form>
       </div>
     </div>
-  );
+  )
 }

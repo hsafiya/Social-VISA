@@ -7,15 +7,16 @@ import { QUERY_POSTS } from '../../utils/queries.js'
 import Auth from '../../utils/auth'
 
 export default function Feed({ username }) {
-  const { loading, data } = useQuery(QUERY_POSTS)
+  const { loading, data } = useQuery(QUERY_POSTS, {
+    variables: { username: username },
+  })
   const posts = data?.posts || []
-  console.log(posts)
-  const loggedIn = Auth.loggedIn()
+  const profile = Auth.getProfile()
 
   return (
     <div className="feed">
       <div className="feedWrapper">
-        {/* {(!username || username === user.username) && <Share />} */}
+        {(!username || username === profile.data.username) && <Share />}
 
         {loading ? (
           <div>Loading...</div>
