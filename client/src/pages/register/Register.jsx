@@ -1,31 +1,48 @@
-import axios from 'axios'
-import { useRef } from 'react'
+// import axios from 'axios'
+// import { useRef } from 'react'
 import './register.css'
-import { useHistory } from 'react-router'
+// import { useHistory } from 'react-router'
+
+import React, { useState } from 'react'
+import { useMutation } from '@apollo/react-hooks'
+import { ADD_USER } from '../../utils/mutations'
+import Auth from '../../utils/auth'
 
 export default function Register() {
-  const username = useRef()
-  const email = useRef()
-  const password = useRef()
-  const passwordAgain = useRef()
-  const history = useHistory()
+  // const username = useRef()
+  // const email = useRef()
+  // const password = useRef()
+  // const passwordAgain = useRef()
+  // const history = useHistory()
+
+  const [formState, setFormState] = useState({
+    username: '',
+    email: '',
+    password: '',
+  })
+  const [addUser, { error }] = useMutation(ADD_USER)
+
+  // update state based on form input changes
+  const handleChange = (event) => {
+    const { name, value } = event.target
+
+    setFormState({
+      ...formState,
+      [name]: value,
+    })
+  }
 
   const handleClick = async (e) => {
     e.preventDefault()
-    if (passwordAgain.current.value !== password.current.value) {
-      passwordAgain.current.setCustomValidity("Passwords don't match!")
-    } else {
-      const user = {
-        username: username.current.value,
-        email: email.current.value,
-        password: password.current.value,
-      }
-      try {
-        await axios.post('/auth/register', user)
-        history.push('/login')
-      } catch (err) {
-        console.log(err)
-      }
+
+    try {
+      const { data } = await addUser({
+        variables: { ...formState },
+      })
+
+      Auth.login(data.addUser.token)
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -43,35 +60,53 @@ export default function Register() {
             <input
               placeholder="Username"
               required
-              ref={username}
               className="loginInput"
+              name="username"
+              type="username"
+              id="username"
+              value={formState.username}
+              onChange={handleChange}
             />
             <input
               placeholder="Email"
               required
-              ref={email}
               className="loginInput"
               type="email"
+              name="email"
+              id="email"
+              value={formState.email}
+              onChange={handleChange}
             />
             <input
               placeholder="Password"
               required
-              ref={password}
               className="loginInput"
               type="password"
               minLength="6"
+              name="password"
+              id="password"
+              value={formState.password}
+              onChange={handleChange}
             />
             <input
               placeholder="Password Again"
               required
-              ref={passwordAgain}
               className="loginInput"
               type="password"
+              name="password"
+              id="password"
             />
             <button className="loginButton" type="submit">
               Sign Up
             </button>
-            <button className="loginRegisterButton">Log into Account</button>
+            <button
+              className="loginRegisterButton"
+              onClick={() => {
+                window.location = '/login'
+              }}
+            >
+              Log into Account
+            </button>
           </form>
         </div>
       </div>
