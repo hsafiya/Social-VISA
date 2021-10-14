@@ -57,7 +57,7 @@ export const ADD_FRIEND = gql`
     follow(friendId: $id) {
       _id
       username
-      friends {
+      followings {
         _id
         username
       }
@@ -67,10 +67,10 @@ export const ADD_FRIEND = gql`
 
 export const REMOVE_FRIEND = gql`
   mutation unfollow($id: ID!) {
-    unfollow(id: $id) {
+    unfollow(friendId: $id) {
       _id
       username
-      friends {
+      followings {
         _id
         username
       }

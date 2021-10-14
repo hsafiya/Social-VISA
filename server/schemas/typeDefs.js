@@ -60,8 +60,8 @@ const typeDefs = gql`
     addPost(postText: String!): Post
     addComment(postId: ID!, commentText: String!): Post
     deletePost(postId: ID!): Post
-    follow(friendId: ID!): [User]
-    unfollow(friendId: ID!): [User]
+    follow(friendId: ID!): User
+    unfollow(friendId: ID!): User
   }
 `
 

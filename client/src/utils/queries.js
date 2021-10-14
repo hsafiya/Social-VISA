@@ -82,6 +82,7 @@ export const QUERY_ME = gql`
       followings {
         _id
         username
+        profilePicture
       }
     }
   }

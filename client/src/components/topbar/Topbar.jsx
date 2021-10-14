@@ -25,8 +25,6 @@ export default function Topbar() {
   const { data: userData, loading } = useQuery(QUERY_ME_BASIC)
   const me = userData?.me || {}
 
-  console.log(me)
-
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const handleClick = (event) => {
