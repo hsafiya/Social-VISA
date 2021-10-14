@@ -16,6 +16,7 @@ export default function Share() {
   const { data: userData, loading } = useQuery(QUERY_ME)
   const me = userData?.me || {}
   const [postText, setPostText] = useState('')
+  const [characterCount, setCharacterCount] = useState(0)
 
   const [addPost, { error }] = useMutation(ADD_POST, {
     update(cache, { data: { addPost } }) {
@@ -27,16 +28,16 @@ export default function Share() {
           query: QUERY_POSTS,
           data: { posts: [addPost, ...posts] },
         })
+
+        // update me object's cache
+        const { me } = cache.readQuery({ query: QUERY_ME })
+        cache.writeQuery({
+          query: QUERY_ME,
+          data: { me: { ...me, posts: [...me.posts, addPost] } },
+        })
       } catch (e) {
         console.error(e)
       }
-
-      // update me object's cache
-      const { me } = cache.readQuery({ query: QUERY_ME })
-      cache.writeQuery({
-        query: QUERY_ME,
-        data: { me: { ...me, posts: [...me.posts, addPost] } },
-      })
     },
   })
 
@@ -51,9 +52,18 @@ export default function Share() {
 
       // clear form value
       setPostText('')
+      setCharacterCount(0)
       window.location.reload()
     } catch (e) {
       console.error(e)
+    }
+  }
+
+  // update state based on form input changes
+  const handleChange = (event) => {
+    if (event.target.value.length <= 280) {
+      setPostText(event.target.value)
+      setCharacterCount(event.target.value.length)
     }
   }
 
@@ -90,10 +100,13 @@ export default function Share() {
       <div className="shareWrapper">
         <div className="shareTop">
           <img className="shareProfileImg" src={me.profilePicture} alt="" />
-          <input
+          <textarea
             placeholder={"What's in your mind " + me.username + '?'}
+            value={postText}
             className="shareInput"
-          />
+            onChange={handleChange}
+          ></textarea>
+          {/* <input /> */}
         </div>
         <hr className="shareHr" />
         {file && (

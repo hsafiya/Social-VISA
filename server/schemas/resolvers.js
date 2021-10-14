@@ -89,7 +89,7 @@ const resolvers = {
       if (context.user) {
         const post = await Post.create({
           ...args,
-          userId: context.user._id,
+          username: context.user.username,
         })
 
         await User.findByIdAndUpdate(
@@ -106,7 +106,7 @@ const resolvers = {
     deletePost: async (parent, { postId }, context) => {
       if (context.user) {
         const post = await Post.findById(postId)
-        if (context.user._id === post.userId) {
+        if (context.user.username === post.username) {
           await User.findByIdAndUpdate(
             { _id: context.user._id },
             { $pull: { posts: postId } },
