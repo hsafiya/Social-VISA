@@ -7,7 +7,7 @@ import { Add, Remove } from '@material-ui/icons'
 
 import Auth from '../../utils/auth'
 import { useQuery } from '@apollo/react-hooks'
-import { QUERY_ME } from '../../utils/queries'
+import { QUERY_ME, QUERY_USER } from '../../utils/queries'
 
 export default function Rightbar({ user }) {
   const { data: userData } = useQuery(QUERY_ME)
@@ -58,7 +58,7 @@ export default function Rightbar({ user }) {
         <h4 className="rightbarTitle">Your Friends</h4>
         <ul className="rightbarFriendList">
           {me.followings
-            ? me.followings.map((u) => <Online key={u.id} user={u} />)
+            ? me.followings.map((u, i) => <Online key={i} user={u} />)
             : Users.map((u) => <Online key={u.id} user={u} />)}
         </ul>
       </>

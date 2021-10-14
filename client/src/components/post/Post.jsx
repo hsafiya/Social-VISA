@@ -1,21 +1,27 @@
 import './post.css'
 import { MoreVert } from '@material-ui/icons'
-import { useContext, useEffect, useState } from 'react'
-// import axios from "axios";
+import { useEffect, useState } from 'react'
 import { format } from 'timeago.js'
 import { Link } from 'react-router-dom'
-import { AuthContext } from '../../context/AuthContext'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { QUERY_USER, QUERY_ME } from '../../utils/queries'
 
 export default function Post({ post }) {
+  // console.log(post)
+
+  const { loading, data } = useQuery(QUERY_USER, {
+    variables: { username: post.username },
+  })
+  const user = data?.user || {}
+
   const [like, setLike] = useState(0)
   const [isLiked, setIsLiked] = useState(false)
-  const [user, setUser] = useState({})
   const PF = process.env.REACT_APP_PUBLIC_FOLDER
-  const { user: currentUser } = useContext(AuthContext)
+  // const { user: currentUser } = useContext(AuthContext)
 
-  useEffect(() => {
-    setIsLiked(post.likes.includes(currentUser._id))
-  }, [currentUser._id, post.likes])
+  // useEffect(() => {
+  //   setIsLiked(post.likes.includes(currentUser._id))
+  // }, [currentUser._id, post.likes])
 
   // useEffect(() => {
   //   const fetchUser = async () => {
@@ -37,7 +43,7 @@ export default function Post({ post }) {
       <div className="postWrapper">
         <div className="postTop">
           <div className="postTopLeft">
-            <Link to={`/profile/${user.username}`}>
+            <Link to={`/profile/${post.username}`}>
               <img
                 className="postProfileImg"
                 src={
@@ -48,7 +54,7 @@ export default function Post({ post }) {
                 alt=""
               />
             </Link>
-            <span className="postUsername">{user.username}</span>
+            <span className="postUsername">{post.username}</span>
             <span className="postDate">{format(post.createdAt)}</span>
           </div>
           <div className="postTopRight">
@@ -56,20 +62,20 @@ export default function Post({ post }) {
           </div>
         </div>
         <div className="postCenter">
-          <span className="postText">{post?.postText}</span>
-          <img className="postImg" src={PF + post.img} alt="" />
+          <span className="postText">{post.postText}</span>
+          {/* <img className="postImg" src={PF + post.img} alt="" /> */}
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">
             <img
               className="likeIcon"
-              src={`${PF}like.png`}
+              src={`${PF}/like.png`}
               // onClick={likeHandler}
               alt=""
             />
             <img
               className="likeIcon"
-              src={`${PF}heart.png`}
+              src={`${PF}/heart.png`}
               // onClick={likeHandler}
               alt=""
             />
