@@ -10,12 +10,12 @@ db.once('open', async () => {
   // create user data
   const userData = []
 
-  for (let i = 0; i < 10; i += 1) {
+  for (let i = 0; i < 19; i += 1) {
     const username = faker.internet.userName()
     const email = faker.internet.email(username)
     const password = faker.internet.password()
-    const profilePicture = faker.image.imageUrl()
-    const coverPicture = faker.image.imageUrl()
+    const profilePicture = faker.image.avatar()
+    const coverPicture = faker.image.image()
     const desc = faker.lorem.words(Math.round(Math.random() * 5) + 1)
     const city = faker.address.cityName()
     const from = faker.address.cityName()
@@ -35,32 +35,32 @@ db.once('open', async () => {
   const createdUsers = await User.collection.insertMany(userData)
 
   // create friends
-  for (let i = 0; i < 50; i += 1) {
+  for (let i = 0; i < 19; i += 1) {
     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length)
-    const { _id: userId } = createdUsers.ops[randomUserIndex]
+    const { username: username } = createdUsers.ops[randomUserIndex]
 
-    let friendId = userId
+    let friendUsername = username
 
-    while (friendId === userId) {
+    while (friendUsername === username) {
       const randomUserIndex = Math.floor(
         Math.random() * createdUsers.ops.length,
       )
-      friendId = createdUsers.ops[randomUserIndex]._id
+      friendUsername = createdUsers.ops[randomUserIndex].username
     }
 
     await User.updateOne(
-      { _id: userId },
-      { $addToSet: { followings: friendId } },
+      { username: username },
+      { $addToSet: { followings: { username: friendUsername } } },
     )
     await User.updateOne(
-      { _id: friendId },
-      { $addToSet: { followers: userId } },
+      { username: friendUsername },
+      { $addToSet: { followers: { username: username } } },
     )
   }
 
   // create thoughts
   let createdPosts = []
-  for (let i = 0; i < 100; i += 1) {
+  for (let i = 0; i < 30; i += 1) {
     const postText = faker.lorem.words(Math.round(Math.random() * 20) + 1)
 
     const randomUserIndex = Math.floor(Math.random() * createdUsers.ops.length)

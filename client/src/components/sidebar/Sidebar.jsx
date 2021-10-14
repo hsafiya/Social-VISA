@@ -1,4 +1,4 @@
-import "./sidebar.css";
+import './sidebar.css'
 import {
   RssFeed,
   Chat,
@@ -9,11 +9,14 @@ import {
   WorkOutline,
   Event,
   School,
-} from "@material-ui/icons";
-import { Users } from "../../dummyData";
-import CloseFriend from "../closeFriend/CloseFriend";
+} from '@material-ui/icons'
+import CloseFriend from '../closeFriend/CloseFriend'
+import { useQuery } from '@apollo/react-hooks'
+import { QUERY_USERS } from '../../utils/queries'
 
 export default function Sidebar() {
+  const { data: userData } = useQuery(QUERY_USERS)
+  const users = userData?.users || []
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
@@ -58,11 +61,11 @@ export default function Sidebar() {
         <button className="sidebarButton">Show More</button>
         <hr className="sidebarHr" />
         <ul className="sidebarFriendList">
-          {Users.map((u) => (
+          {users?.map((u) => (
             <CloseFriend key={u.id} user={u} />
           ))}
         </ul>
       </div>
     </div>
-  );
+  )
 }

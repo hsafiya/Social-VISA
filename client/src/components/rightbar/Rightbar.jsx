@@ -14,7 +14,7 @@ export default function Rightbar({ user }) {
   const me = userData?.me || {}
   // console.log(me)
 
-  const profile = Auth.getProfile()
+  // const profile = Auth.getProfile()
 
   // useEffect(() => {
   //   const getFriends = async () => {

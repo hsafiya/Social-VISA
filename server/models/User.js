@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose')
 const bcrypt = require('bcrypt')
+const faker = require('faker')
 
 const userSchema = new Schema(
   {
@@ -25,11 +26,11 @@ const userSchema = new Schema(
     },
     profilePicture: {
       type: String,
-      default: '',
+      default: faker.image.avatar(),
     },
     coverPicture: {
       type: String,
-      default: '',
+      default: faker.image.image(),
     },
     followers: {
       type: Array,

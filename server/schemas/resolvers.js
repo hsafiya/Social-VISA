@@ -140,12 +140,12 @@ const resolvers = {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
           { username: context.user.username },
-          { $addToSet: { followings: username } },
+          { $addToSet: { followings: { username: username } } },
           { new: true },
         ).populate('followings')
         const friend = await User.findOneAndUpdate(
           { username: username },
-          { $addToSet: { followers: context.user.username } },
+          { $addToSet: { followers: { username: context.user.username } } },
           { new: true },
         ).populate('followers')
 
@@ -158,12 +158,12 @@ const resolvers = {
       if (context.user) {
         const updatedUser = await User.findOneAndUpdate(
           { username: context.user.username },
-          { $pull: { followings: username } },
+          { $pull: { followings: { username: username } } },
           { new: true },
         ).populate('followings')
         const friend = await User.findOneAndUpdate(
           { username: username },
-          { $pull: { followers: context.user.username } },
+          { $pull: { followers: { username: context.user.username } } },
           { new: true },
         ).populate('followers')
 

@@ -1,15 +1,24 @@
 import './online.css'
+import { useQuery } from '@apollo/react-hooks'
+import { QUERY_USER } from '../../utils/queries'
 
 export default function Online({ user }) {
-  // const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  console.log(user)
+  const { data: userData } = useQuery(QUERY_USER, {
+    variables: { username: user.username },
+  })
+  const friend = userData?.user || {}
+
   return (
     <li className="rightbarFriend">
       <div className="rightbarProfileImgContainer">
-        <img className="rightbarProfileImg" src={user.profilePicture} alt="" />
+        <img
+          className="rightbarProfileImg"
+          src={friend?.profilePicture}
+          alt=""
+        />
         <span className="rightbarOnline"></span>
       </div>
-      <span className="rightbarUsername">{user.username}</span>
+      <span className="rightbarUsername">{friend?.username}</span>
     </li>
   )
 }

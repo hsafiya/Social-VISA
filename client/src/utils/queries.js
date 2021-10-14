@@ -33,6 +33,15 @@ export const QUERY_POST = gql`
     }
   }
 `
+export const QUERY_USERS = gql`
+  {
+    users {
+      _id
+      username
+      profilePicture
+    }
+  }
+`
 
 export const QUERY_USER = gql`
   query user($username: String!) {
@@ -40,7 +49,11 @@ export const QUERY_USER = gql`
       _id
       username
       email
-      friends {
+      followers {
+        _id
+        username
+      }
+      followings {
         _id
         username
       }
@@ -49,6 +62,7 @@ export const QUERY_USER = gql`
         postText
         createdAt
       }
+      profilePicture
     }
   }
 `
