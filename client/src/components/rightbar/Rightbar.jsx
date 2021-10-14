@@ -53,8 +53,8 @@ export default function Rightbar() {
         <img className="rightbarAd" src={`${PF}/ad.png`} alt="" />
         <h4 className="rightbarTitle">Your Friends</h4>
         <ul className="rightbarFriendList">
-          {user.followings
-            ? user.followings.map((u, i) => <Online key={i} user={u} />)
+          {user.friends
+            ? user.friends.map((u, i) => <Online key={i} user={u} />)
             : null}
         </ul>
       </>
