@@ -4,7 +4,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 mongoose.connect(
-  process.env.MONGO_URI,
+  process.env.MONGODB_URI || 'mongodb://localhost/visa',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
