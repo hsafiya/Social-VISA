@@ -89,11 +89,7 @@ export default function Rightbar({ user }) {
             <span className="rightbarInfoValue">
               {user.relationship === 1
                 ? 'Single'
-<<<<<<< HEAD
-                : user.relationship === 1
-=======
                 : user.relationship === 2
->>>>>>> victor/new-components
                 ? 'Married'
                 : '-'}
             </span>
