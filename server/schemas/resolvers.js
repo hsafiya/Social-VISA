@@ -57,14 +57,7 @@ const resolvers = {
     },
     editUser: async (parent, args, context) => {
       if (context.user) {
-        const {
-          profilePicture,
-          coverPicture,
-          desc,
-          city,
-          from,
-          relationship,
-        } = args
+        const { profilePicture, coverPicture, desc, city, from } = args
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
           {
@@ -74,7 +67,6 @@ const resolvers = {
               desc: desc,
               city: city,
               from: from,
-              relationship: relationship,
             },
           },
           { new: true },
@@ -136,36 +128,28 @@ const resolvers = {
 
       throw new AuthenticationError('You need to be logged in!')
     },
-    follow: async (parent, { username }, context) => {
+    addFriend: async (parent, { username }, context) => {
       if (context.user) {
+        const friend = await User.findOne({ username: username })
         const updatedUser = await User.findOneAndUpdate(
           { username: context.user.username },
-          { $addToSet: { followings: { username: username } } },
+          { $addToSet: { friends: friend } },
           { new: true },
-        ).populate('followings')
-        const friend = await User.findOneAndUpdate(
-          { username: username },
-          { $addToSet: { followers: { username: context.user.username } } },
-          { new: true },
-        ).populate('followers')
+        )
 
         return updatedUser
       }
 
       throw new AuthenticationError('You need to be logged in!')
     },
-    unfollow: async (parent, { username }, context) => {
+    removeFriend: async (parent, { username }, context) => {
       if (context.user) {
+        const friend = await User.findOne({ username: username })
         const updatedUser = await User.findOneAndUpdate(
           { username: context.user.username },
-          { $pull: { followings: { username: username } } },
+          { $pull: { friends: friend } },
           { new: true },
-        ).populate('followings')
-        const friend = await User.findOneAndUpdate(
-          { username: username },
-          { $pull: { followers: { username: context.user.username } } },
-          { new: true },
-        ).populate('followers')
+        )
 
         return updatedUser
       }

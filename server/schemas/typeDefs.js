@@ -9,8 +9,7 @@ const typeDefs = gql`
     email: String
     profilePicture: String
     coverPicture: String
-    followers: [User]
-    followings: [User]
+    friends: [User]
     desc: String
     city: String
     from: String
@@ -60,8 +59,8 @@ const typeDefs = gql`
     addPost(postText: String!): Post
     addComment(postId: ID!, commentText: String!): Post
     deletePost(postId: ID!): Post
-    follow(username: String!): User
-    unfollow(username: String!): User
+    addFriend(username: String!): User
+    removeFriend(username: String!): User
   }
 `
 

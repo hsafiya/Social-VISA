@@ -49,13 +49,10 @@ export const QUERY_USER = gql`
       _id
       username
       email
-      followers {
+      friends {
         _id
         username
-      }
-      followings {
-        _id
-        username
+        profilePicture
       }
       posts {
         _id
@@ -63,6 +60,10 @@ export const QUERY_USER = gql`
         createdAt
       }
       profilePicture
+      coverPicture
+      desc
+      city
+      from
     }
   }
 `
@@ -89,11 +90,7 @@ export const QUERY_ME = gql`
           username
         }
       }
-      followers {
-        _id
-        username
-      }
-      followings {
+      friends {
         _id
         username
         profilePicture

@@ -48,13 +48,11 @@ db.once('open', async () => {
       friendUsername = createdUsers.ops[randomUserIndex].username
     }
 
-    await User.updateOne(
+    const friend = await User.findOne({ username: friendUsername })
+
+    await User.findOneAndUpdate(
       { username: username },
-      { $addToSet: { followings: { username: friendUsername } } },
-    )
-    await User.updateOne(
-      { username: friendUsername },
-      { $addToSet: { followers: { username: username } } },
+      { $addToSet: { friends: friend } },
     )
   }
 

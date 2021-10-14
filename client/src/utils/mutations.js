@@ -53,11 +53,11 @@ export const ADD_COMMENT = gql`
 `
 
 export const ADD_FRIEND = gql`
-  mutation follow($id: ID!) {
-    follow(friendId: $id) {
+  mutation follow($username: String!) {
+    addFriend(username: $username) {
       _id
       username
-      followings {
+      friends {
         _id
         username
       }
@@ -66,11 +66,11 @@ export const ADD_FRIEND = gql`
 `
 
 export const REMOVE_FRIEND = gql`
-  mutation unfollow($id: ID!) {
-    unfollow(friendId: $id) {
+  mutation unfollow($username: String!) {
+    unfollow(username: $username) {
       _id
       username
-      followings {
+      friends {
         _id
         username
       }

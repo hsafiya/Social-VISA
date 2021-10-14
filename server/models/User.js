@@ -32,11 +32,7 @@ const userSchema = new Schema(
       type: String,
       default: faker.image.image(),
     },
-    followers: {
-      type: Array,
-      default: [],
-    },
-    followings: {
+    friends: {
       type: Array,
       default: [],
     },
@@ -51,10 +47,12 @@ const userSchema = new Schema(
     city: {
       type: String,
       max: 50,
+      default: faker.address.cityName(),
     },
     from: {
       type: String,
       max: 50,
+      default: faker.address.cityName(),
     },
     posts: [
       {

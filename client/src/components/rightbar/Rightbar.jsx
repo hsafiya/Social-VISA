@@ -1,17 +1,23 @@
-import "./rightbar.css";
-import Online from "../online/Online";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Add, Remove } from "@material-ui/icons";
+import './rightbar.css'
+import Online from '../online/Online'
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { Add, Remove } from '@material-ui/icons'
 
-import Auth from "../../utils/auth";
-import { useQuery } from "@apollo/react-hooks";
-import { QUERY_ME, QUERY_USER } from "../../utils/queries";
+import Auth from '../../utils/auth'
+import { useQuery } from '@apollo/react-hooks'
+import { QUERY_ME, QUERY_USER } from '../../utils/queries'
 
-export default function Rightbar({ user }) {
-  const { data: userData } = useQuery(QUERY_ME);
-  const me = userData?.me || {};
-  // console.log(me)
+export default function Rightbar({ info }) {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER
+
+  const { username: userParam } = useParams()
+
+  const { loading, data } = useQuery(userParam ? QUERY_USER : QUERY_ME, {
+    variables: { username: userParam },
+  })
+  const user = data?.me || data?.user || {}
+  console.log(user)
 
   // const profile = Auth.getProfile()
 
@@ -54,16 +60,16 @@ export default function Rightbar({ user }) {
             today.
           </span>
         </div>
-        <img className="rightbarAd" src="assets/ad.png" alt="" />
+        <img className="rightbarAd" src={`${PF}/ad.png`} alt="" />
         <h4 className="rightbarTitle">Your Friends</h4>
         <ul className="rightbarFriendList">
-          {me.followings
-            ? me.followings.map((u, i) => <Online key={i} user={u} />)
+          {user.followings
+            ? user.followings.map((u, i) => <Online key={i} user={u} />)
             : null}
         </ul>
       </>
-    );
-  };
+    )
+  }
 
   const ProfileRightbar = () => {
     return (
@@ -88,10 +94,10 @@ export default function Rightbar({ user }) {
             <span className="rightbarInfoKey">Relationship:</span>
             <span className="rightbarInfoValue">
               {user.relationship === 1
-                ? "Single"
+                ? 'Single'
                 : user.relationship === 2
-                ? "Married"
-                : "-"}
+                ? 'Married'
+                : '-'}
             </span>
           </div>
         </div>
@@ -118,13 +124,13 @@ export default function Rightbar({ user }) {
           ))} */}
         </div>
       </>
-    );
-  };
+    )
+  }
   return (
     <div className="rightbar">
       <div className="rightbarWrapper">
-        {user ? <ProfileRightbar /> : <HomeRightbar />}
+        {userParam ? <ProfileRightbar /> : <HomeRightbar />}
       </div>
     </div>
-  );
+  )
 }
