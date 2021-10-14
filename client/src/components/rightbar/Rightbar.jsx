@@ -10,6 +10,7 @@ import { QUERY_ME, QUERY_USER } from '../../utils/queries'
 
 export default function Rightbar({ info }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER
+  const [followed, setFollowed] = useState(false)
 
   const { username: userParam } = useParams()
 
@@ -19,7 +20,7 @@ export default function Rightbar({ info }) {
   const user = data?.me || data?.user || {}
   console.log(user)
 
-  // const profile = Auth.getProfile()
+  const profile = Auth.getProfile()
 
   // useEffect(() => {
   //   const getFriends = async () => {
@@ -33,22 +34,22 @@ export default function Rightbar({ info }) {
   //   getFriends()
   // }, [user])
 
-  // const handleClick = async () => {
-  //   try {
-  //     if (followed) {
-  //       await axios.put(`/users/${user._id}/unfollow`, {
-  //         userId: currentUser._id,
-  //       })
-  //       dispatch({ type: 'UNFOLLOW', payload: user._id })
-  //     } else {
-  //       await axios.put(`/users/${user._id}/follow`, {
-  //         userId: currentUser._id,
-  //       })
-  //       dispatch({ type: 'FOLLOW', payload: user._id })
-  //     }
-  //     setFollowed(!followed)
-  //   } catch (err) {}
-  // }
+  const handleClick = async () => {
+    // try {
+    //   if (followed) {
+    //     await axios.put(`/users/${user._id}/unfollow`, {
+    //       userId: currentUser._id,
+    //     })
+    //     dispatch({ type: 'UNFOLLOW', payload: user._id })
+    //   } else {
+    //     await axios.put(`/users/${user._id}/follow`, {
+    //       userId: currentUser._id,
+    //     })
+    //     dispatch({ type: 'FOLLOW', payload: user._id })
+    //   }
+    setFollowed(!followed)
+    // } catch (err) {}
+  }
 
   const HomeRightbar = () => {
     return (
@@ -74,12 +75,12 @@ export default function Rightbar({ info }) {
   const ProfileRightbar = () => {
     return (
       <>
-        {/* {user.username !== currentUser.username && (
+        {user.username !== profile.username && (
           <button className="rightbarFollowButton" onClick={handleClick}>
             {followed ? 'Unfollow' : 'Follow'}
             {followed ? <Remove /> : <Add />}
           </button>
-        )} */}
+        )}
         <h4 className="rightbarTitle">User information</h4>
         <div className="rightbarInfo">
           <div className="rightbarInfoItem">
@@ -103,25 +104,30 @@ export default function Rightbar({ info }) {
         </div>
         <h4 className="rightbarTitle">User friends</h4>
         <div className="rightbarFollowings">
-          {/* {friends.map((friend) => (
-            <Link
-              to={'/profile/' + friend.username}
-              style={{ textDecoration: 'none' }}
-            >
-              <div className="rightbarFollowing">
-                <img
-                  src={
-                    friend.profilePicture
-                      ? PF + friend.profilePicture
-                      : PF + 'person/noAvatar.png'
-                  }
-                  alt=""
-                  className="rightbarFollowingImg"
-                />
-                <span className="rightbarFollowingName">{friend.username}</span>
-              </div>
-            </Link>
-          ))} */}
+          {user.friends
+            ? user.friends.map((friend) => (
+                <Link
+                  to={'/profile/' + friend.username}
+                  style={{ textDecoration: 'none' }}
+                  key={friend._id}
+                >
+                  <div className="rightbarFollowing">
+                    <img
+                      src={
+                        friend.profilePicture
+                          ? friend.profilePicture
+                          : PF + 'person/noAvatar.png'
+                      }
+                      alt=""
+                      className="rightbarFollowingImg"
+                    />
+                    <span className="rightbarFollowingName">
+                      {friend.username}
+                    </span>
+                  </div>
+                </Link>
+              ))
+            : null}
         </div>
       </>
     )
