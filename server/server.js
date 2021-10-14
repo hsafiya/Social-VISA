@@ -1,39 +1,27 @@
 const express = require('express')
-const app = express()
-const mongoose = require('mongoose')
-const dotenv = require('dotenv')
-const helmet = require('helmet')
-const morgan = require('morgan')
-const multer = require('multer')
-const userRoute = require('./routes/users')
-const authRoute = require('./routes/auth')
-const postRoute = require('./routes/posts')
-const conversationRoute = require('./routes/conversations')
-const messageRoute = require('./routes/messages')
-const router = express.Router()
+const { ApolloServer } = require('apollo-server-express')
 const path = require('path')
+const dotenv = require('dotenv')
+const multer = require('multer')
+// const userRoute = require('./routes/users')
+// const authRoute = require('./routes/auth')
+// const postRoute = require('./routes/posts')
+// const conversationRoute = require('./routes/conversations')
+// const messageRoute = require('./routes/messages')
+
+const { typeDefs, resolvers } = require('./schemas')
+const { authMiddleware } = require('./utils/auth')
+const db = require('./config/connection')
 
 dotenv.config()
-
-// connect to DB
-mongoose.connect(
-  process.env.MONGODB_URI || 'mongodb://localhost/social-visa',
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  },
-  () => {
-    console.log('Connected to DB')
-  },
-)
+const PORT = process.env.PORT || 3001
+const app = express()
 
 app.use('/images', express.static(path.join(__dirname, 'public/images')))
 
 //middleware
+app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
-app.use(helmet())
-app.use(morgan('common'))
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -53,12 +41,34 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
   }
 })
 
-app.use('/api/auth', authRoute)
-app.use('/api/users', userRoute)
-app.use('/api/posts', postRoute)
-app.use('/api/conversations', conversationRoute)
-app.use('/api/messages', messageRoute)
+// app.use('/api/auth', authRoute)
+// app.use('/api/users', userRoute)
+// app.use('/api/posts', postRoute)
+// app.use('/api/conversations', conversationRoute)
+// app.use('/api/messages', messageRoute)
+// Serve up static assets
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')))
+}
 
-app.listen(8800, () => {
-  console.log('Backend server is running!')
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../client/build/index.html'))
+// })
+
+const startApolloServer = async () => {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: authMiddleware,
+  })
+  await server.start()
+  server.applyMiddleware({ app })
+  console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`)
+}
+startApolloServer()
+
+db.once('open', () => {
+  app.listen(PORT, () => {
+    console.log(`API server running on port ${PORT}!`)
+  })
 })

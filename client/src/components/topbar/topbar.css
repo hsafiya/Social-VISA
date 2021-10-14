@@ -95,8 +95,8 @@
   cursor: pointer;
 }
 
-@media screen and (max-width: 768px)  {
-  .topbarLink{
+@media screen and (max-width: 768px) {
+  .topbarLink {
     display: none;
   }
 }

@@ -1,12 +1,13 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require('mongoose')
+const commentSchema = require('./Comment')
 
-const PostSchema = new mongoose.Schema(
+const postSchema = new Schema(
   {
-    userId: {
+    username: {
       type: String,
       required: true,
     },
-    desc: {
+    postText: {
       type: String,
       max: 500,
     },
@@ -17,8 +18,14 @@ const PostSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    comments: [commentSchema],
   },
-  { timestamps: true }
-);
+  { timestamps: true },
+)
 
-module.exports = mongoose.model("Post", PostSchema);
+postSchema.virtual('reactionCount').get(function () {
+  return this.reactions.length
+})
+
+const Post = model('Post', postSchema)
+module.exports = Post
